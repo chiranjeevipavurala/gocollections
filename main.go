@@ -26,7 +26,7 @@ func main() {
 
 	iterator := hs.Iterator()
 	for iterator.HasNext() {
-		val := iterator.Next()
+		val, _ := iterator.Next()
 		fmt.Println("From Iterator", val)
 	}
 
@@ -45,7 +45,8 @@ func main() {
 	_, _ = tempList.Set(2, "updated1")
 	listIterator := tempList.Iterator()
 	for listIterator.HasNext() {
-		fmt.Println("From List Iterator", listIterator.Next())
+		val, _ := listIterator.Next()
+		fmt.Println("From List Iterator", val)
 	}
 
 }

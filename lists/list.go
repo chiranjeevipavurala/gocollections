@@ -12,33 +12,34 @@ type List[E comparable] interface {
 
 	AddAllAtIndex(index int, collection []E) (bool, error)
 	Clear()
-	//Contains(obj interface{})
-	//	containsAll(Collection<?> c)
-	//Equals(obj interface{})
+	Contains(val E) bool
+	ContainsAll(collection []E) bool
+	Equals(collection []E) bool
 	Get(index int) E
 	//HashCode() int
-	//IndexOf(obj interface{})
+	IndexOf(val E) int
 	IsEmpty() bool
 	Iterator() sets.Iterator[E]
-	//LastIndexOf(obj interface{}) int
+	LastIndexOf(val E) int
 	//listIterator()
 	//listIterator(int index)
 	RemoveAtIndex(index int) (*E, error)
 	RemoveFirst() (*E, error)
 	RemoveLast() (*E, error)
-	//Remove(obj interface{}) bool
+	Remove(val E) bool
 	//	removeAll(Collection<?> c)
 	//replaceAll(UnaryOperator<E> operator)
 	//	retainAll(Collection<?> c)
 	Set(index int, element E) (*E, error)
 
 	Size() int
+	ToArray() []E
+	SubList(fromIndex int, toIndex int) (List[E], error)
 	/*
 		//	sort(Comparator<? super E> c)
 		//	spliterator()
-		SubList(fromIndex int, toIndex int) List[E]
-		ToArray() []interface{}
-		//ToArrayOfType([]T)
+
+
 	*/
 }
 
