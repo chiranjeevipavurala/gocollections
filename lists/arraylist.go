@@ -97,13 +97,20 @@ func (a *ArrayList[E]) Contains(element E) bool {
 	}
 	return false
 }
-func (a *ArrayList[E]) ContainsAll(elements []E) bool {
+func (a *ArrayList[E]) ContainsAll(elements []E) (bool, error) {
+
+	if elements == nil {
+		return false, errors.New(string(errorcodes.NullPointerError))
+	}
+	if len(elements) == 0 {
+		return false, nil
+	}
 	for _, val := range elements {
 		if !a.Contains(val) {
-			return false
+			return false, nil
 		}
 	}
-	return true
+	return true, nil
 }
 
 func (a *ArrayList[E]) Equals(elements []E) bool {
@@ -134,8 +141,11 @@ func (a *ArrayList[E]) LastIndexOf(element E) int {
 	return -1
 }
 
-func (a *ArrayList[E]) Get(index int) E {
-	return a.values[index]
+func (a *ArrayList[E]) Get(index int) (*E, error) {
+	if index >= len(a.values) || index < 0 {
+		return nil, errors.New(string(errorcodes.IndexOutOfBoundsError))
+	}
+	return &a.values[index], nil
 }
 func (a *ArrayList[E]) IsEmpty() bool {
 	return len(a.values) == 0

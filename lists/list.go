@@ -13,9 +13,9 @@ type List[E comparable] interface {
 	AddAllAtIndex(index int, collection []E) (bool, error)
 	Clear()
 	Contains(val E) bool
-	ContainsAll(collection []E) bool
+	ContainsAll(collection []E) (bool, error)
 	Equals(collection []E) bool
-	Get(index int) E
+	Get(index int) (*E, error)
 	//HashCode() int
 	IndexOf(val E) int
 	IsEmpty() bool
@@ -46,12 +46,15 @@ type List[E comparable] interface {
 type ListNode[E comparable] interface {
 	GetNext() ListNode[E]
 	SetNext(ListNode[E])
-	GetData() E
+	GetData() *E
 	SetData(E)
+	GetPrev() ListNode[E]
+	SetPrev(ListNode[E])
 }
 type ListNodeImpl[E comparable] struct {
 	data E
 	next ListNode[E]
+	prev ListNode[E]
 }
 
 func NewListNodeImpl[E comparable](val E) ListNode[E] {
@@ -59,8 +62,8 @@ func NewListNodeImpl[E comparable](val E) ListNode[E] {
 		data: val,
 	}
 }
-func (t *ListNodeImpl[E]) GetData() E {
-	return t.data
+func (t *ListNodeImpl[E]) GetData() *E {
+	return &t.data
 }
 
 func (t *ListNodeImpl[E]) SetData(val E) {
@@ -72,4 +75,10 @@ func (t *ListNodeImpl[E]) SetNext(val ListNode[E]) {
 }
 func (t *ListNodeImpl[E]) GetNext() ListNode[E] {
 	return t.next
+}
+func (t *ListNodeImpl[E]) SetPrev(val ListNode[E]) {
+	t.prev = val
+}
+func (t *ListNodeImpl[E]) GetPrev() ListNode[E] {
+	return t.prev
 }

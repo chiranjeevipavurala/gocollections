@@ -14,17 +14,30 @@ func TestArrayList_Add(t *testing.T) {
 		t.Errorf("Expected size to be 3, got %d", list.Size())
 	}
 
-	if list.Get(0) != 1 {
-		t.Errorf("Expected element at index 0 to be 1, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 0 to be 1, got %d", *val)
 	}
 
-	if list.Get(1) != 2 {
-		t.Errorf("Expected element at index 1 to be 2, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 1 to be 2, got %d", *val)
 	}
 
-	if list.Get(2) != 3 {
-		t.Errorf("Expected element at index 2 to be 3, got %d", list.Get(2))
+	val, err = list.Get(2)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
 	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 2 to be 3, got %d", *val)
+	}
+
 }
 
 func TestArrayList_AddAll(t *testing.T) {
@@ -37,16 +50,28 @@ func TestArrayList_AddAll(t *testing.T) {
 		t.Errorf("Expected size to be 3, got %d", list.Size())
 	}
 
-	if list.Get(0) != 1 {
-		t.Errorf("Expected element at index 0 to be 1, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 0 to be 1, got %d", *val)
 	}
 
-	if list.Get(1) != 2 {
-		t.Errorf("Expected element at index 1 to be 2, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 1 to be 2, got %d", *val)
 	}
 
-	if list.Get(2) != 3 {
-		t.Errorf("Expected element at index 2 to be 3, got %d", list.Get(2))
+	val, err = list.Get(2)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 2 to be 3, got %d", *val)
 	}
 
 	list.AddAll([]int{4, 5, 6})
@@ -55,17 +80,31 @@ func TestArrayList_AddAll(t *testing.T) {
 		t.Errorf("Expected size to be 6, got %d", list.Size())
 	}
 
-	if list.Get(3) != 4 {
-		t.Errorf("Expected element at index 3 to be 4, got %d", list.Get(3))
+	val, err = list.Get(3)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 4 {
+		t.Errorf("Expected element at index 3 to be 4, got %d", *val)
 	}
 
-	if list.Get(4) != 5 {
-		t.Errorf("Expected element at index 4 to be 5, got %d", list.Get(4))
+	val, err = list.Get(4)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 5 {
+		t.Errorf("Expected element at index 4 to be 5, got %d", *val)
+
 	}
 
-	if list.Get(5) != 6 {
-		t.Errorf("Expected element at index 5 to be 6, got %d", list.Get(5))
+	val, err = list.Get(5)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
 	}
+	if *val != 6 {
+		t.Errorf("Expected element at index 5 to be 6, got %d", *val)
+	}
+
 }
 
 func TestArrayList_Clear(t *testing.T) {
@@ -91,16 +130,28 @@ func TestArrayList_Get(t *testing.T) {
 	list.Add(2)
 	list.Add(3)
 
-	if list.Get(0) != 1 {
-		t.Errorf("Expected element at index 0 to be 1, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 0 to be 1, got %d", *val)
 	}
 
-	if list.Get(1) != 2 {
-		t.Errorf("Expected element at index 1 to be 2, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 1 to be 2, got %d", *val)
 	}
 
-	if list.Get(2) != 3 {
-		t.Errorf("Expected element at index 2 to be 3, got %d", list.Get(2))
+	val, err = list.Get(2)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 2 to be 3, got %d", *val)
 	}
 }
 
@@ -163,8 +214,12 @@ func TestArrayList_Set(t *testing.T) {
 		t.Errorf("Expected no error, got %v", err)
 	}
 
-	if list.Get(1) != 4 {
-		t.Errorf("Expected element at index 1 to be 4, got %d", list.Get(1))
+	val, err := list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 4 {
+		t.Errorf("Expected element at index 1 to be 4, got %d", *val)
 	}
 
 	_, err = list.Set(3, 5)
@@ -185,21 +240,6 @@ func TestArrayList_Contains(t *testing.T) {
 
 	if list.Contains(4) {
 		t.Errorf("Expected list not to contain element 4")
-	}
-}
-
-func TestArrayList_ContainsAll(t *testing.T) {
-	list := NewArrayList[int]()
-	list.Add(1)
-	list.Add(2)
-	list.Add(3)
-
-	if !list.ContainsAll([]int{1, 2}) {
-		t.Errorf("Expected list to contain elements 1 and 2")
-	}
-
-	if list.ContainsAll([]int{1, 4}) {
-		t.Errorf("Expected list not to contain elements 1 and 4")
 	}
 }
 
@@ -271,12 +311,20 @@ func TestArrayList_RemoveAtIndex(t *testing.T) {
 		t.Errorf("Expected size to be 2, got %d", list.Size())
 	}
 
-	if list.Get(0) != 1 {
-		t.Errorf("Expected element at index 0 to be 1, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 0 to be 1, got %d", *val)
 	}
 
-	if list.Get(1) != 3 {
-		t.Errorf("Expected element at index 1 to be 3, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 1 to be 3, got %d", *val)
 	}
 
 	_, err = list.RemoveAtIndex(2)
@@ -304,12 +352,20 @@ func TestArrayList_RemoveFirst(t *testing.T) {
 		t.Errorf("Expected size to be 2, got %d", list.Size())
 	}
 
-	if list.Get(0) != 2 {
-		t.Errorf("Expected element at index 0 to be 2, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 0 to be 2, got %d", val)
 	}
 
-	if list.Get(1) != 3 {
-		t.Errorf("Expected element at index 1 to be 3, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 1 to be 3, got %d", val)
 	}
 
 	_, err = list.RemoveFirst()
@@ -347,12 +403,20 @@ func TestArrayList_RemoveLast(t *testing.T) {
 		t.Errorf("Expected size to be 2, got %d", list.Size())
 	}
 
-	if list.Get(0) != 1 {
-		t.Errorf("Expected element at index 0 to be 1, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 0 to be 1, got %d", *val)
 	}
 
-	if list.Get(1) != 2 {
-		t.Errorf("Expected element at index 1 to be 2, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 1 to be 2, got %d", *val)
 	}
 
 	_, err = list.RemoveLast()
@@ -385,20 +449,36 @@ func TestArrayList_AddAtIndex(t *testing.T) {
 		t.Errorf("Expected size to be 4, got %d", list.Size())
 	}
 
-	if list.Get(0) != 1 {
-		t.Errorf("Expected element at index 0 to be 1, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 0 to be 1, got %d", *val)
 	}
 
-	if list.Get(1) != 4 {
-		t.Errorf("Expected element at index 1 to be 4, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 4 {
+		t.Errorf("Expected element at index 1 to be 4, got %d", *val)
 	}
 
-	if list.Get(2) != 2 {
-		t.Errorf("Expected element at index 2 to be 2, got %d", list.Get(2))
+	val, err = list.Get(2)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 2 to be 2, got %d", *val)
 	}
 
-	if list.Get(3) != 3 {
-		t.Errorf("Expected element at index 3 to be 3, got %d", list.Get(3))
+	val, err = list.Get(3)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 3 to be 3, got %d", *val)
 	}
 
 	err = list.AddAtIndex(5, 5)
@@ -418,21 +498,38 @@ func TestArrayList_AddFirst(t *testing.T) {
 		t.Errorf("Expected size to be 4, got %d", list.Size())
 	}
 
-	if list.Get(0) != 0 {
-		t.Errorf("Expected element at index 0 to be 0, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 0 {
+		t.Errorf("Expected element at index 0 to be 0, got %d", *val)
 	}
 
-	if list.Get(1) != 1 {
-		t.Errorf("Expected element at index 1 to be 1, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 1 to be 1, got %d", *val)
 	}
 
-	if list.Get(2) != 2 {
-		t.Errorf("Expected element at index 2 to be 2, got %d", list.Get(2))
+	val, err = list.Get(2)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 2 to be 2, got %d", *val)
 	}
 
-	if list.Get(3) != 3 {
-		t.Errorf("Expected element at index 3 to be 3, got %d", list.Get(3))
+	val, err = list.Get(3)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
 	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 3 to be 3, got %d", *val)
+	}
+
 }
 func TestArrayList_AddLast(t *testing.T) {
 	list := NewArrayListWithInitialCollection[int]([]int{1, 2, 3})
@@ -443,20 +540,36 @@ func TestArrayList_AddLast(t *testing.T) {
 		t.Errorf("Expected size to be 4, got %d", list.Size())
 	}
 
-	if list.Get(0) != 1 {
-		t.Errorf("Expected element at index 0 to be 1, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 0 to be 1, got %d", *val)
 	}
 
-	if list.Get(1) != 2 {
-		t.Errorf("Expected element at index 1 to be 2, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 1 to be 2, got %d", *val)
 	}
 
-	if list.Get(2) != 3 {
-		t.Errorf("Expected element at index 2 to be 3, got %d", list.Get(2))
+	val, err = list.Get(2)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 2 to be 3, got %d", *val)
 	}
 
-	if list.Get(3) != 4 {
-		t.Errorf("Expected element at index 3 to be 4, got %d", list.Get(3))
+	val, err = list.Get(3)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 4 {
+		t.Errorf("Expected element at index 3 to be 4, got %d", *val)
 	}
 }
 
@@ -475,24 +588,44 @@ func TestArrayList_AddAllAtIndex(t *testing.T) {
 		t.Errorf("Expected size to be 5, got %d", list.Size())
 	}
 
-	if list.Get(0) != 1 {
-		t.Errorf("Expected element at index 0 to be 1, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 0 to be 1, got %d", *val)
 	}
 
-	if list.Get(1) != 4 {
-		t.Errorf("Expected element at index 1 to be 4, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 4 {
+		t.Errorf("Expected element at index 1 to be 4, got %d", *val)
 	}
 
-	if list.Get(2) != 5 {
-		t.Errorf("Expected element at index 2 to be 5, got %d", list.Get(2))
+	val, err = list.Get(2)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 5 {
+		t.Errorf("Expected element at index 2 to be 5, got %d", *val)
 	}
 
-	if list.Get(3) != 2 {
-		t.Errorf("Expected element at index 3 to be 2, got %d", list.Get(3))
+	val, err = list.Get(3)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 3 to be 2, got %d", *val)
 	}
 
-	if list.Get(4) != 3 {
-		t.Errorf("Expected element at index 4 to be 3, got %d", list.Get(4))
+	val, err = list.Get(4)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 4 to be 3, got %d", *val)
 	}
 
 	_, err = list.AddAllAtIndex(6, []int{6, 7})
@@ -573,12 +706,20 @@ func TestArrayList_Remove(t *testing.T) {
 		t.Errorf("Expected size to be 2, got %d", list.Size())
 	}
 
-	if list.Get(0) != 1 {
-		t.Errorf("Expected element at index 0 to be 1, got %d", list.Get(0))
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 0 to be 1, got %d", *val)
 	}
 
-	if list.Get(1) != 3 {
-		t.Errorf("Expected element at index 1 to be 3, got %d", list.Get(1))
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 1 to be 3, got %d", *val)
 	}
 
 	if list.Remove(4) {
@@ -601,12 +742,20 @@ func TestArrayList_SubList(t *testing.T) {
 		t.Errorf("Expected size to be 2, got %d", subList.Size())
 	}
 
-	if subList.Get(0) != 2 {
-		t.Errorf("Expected element at index 0 to be 2, got %d", subList.Get(0))
+	val, err := subList.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 0 to be 2, got %d", *val)
 	}
 
-	if subList.Get(1) != 3 {
-		t.Errorf("Expected element at index 1 to be 3, got %d", subList.Get(1))
+	val, err = subList.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 1 to be 3, got %d", *val)
 	}
 
 	_, err = list.SubList(3, 1)
@@ -620,5 +769,47 @@ func TestArrayList_SubList(t *testing.T) {
 	_, err = list.SubList(0, 10)
 	if err == nil {
 		t.Errorf("Expected IndexOutOfBoundsException, got no error")
+	}
+}
+func TestArrayList_ContainsAll(t *testing.T) {
+	list := NewArrayList[int]()
+	list.Add(1)
+	list.Add(2)
+	list.Add(3)
+
+	// Test when elements is nil
+	result, err := list.ContainsAll(nil)
+	if err == nil {
+		t.Errorf("Expected error, got nil")
+	}
+	if result {
+		t.Errorf("Expected result to be false, got true")
+	}
+
+	// Test when elements is empty
+	result, err = list.ContainsAll([]int{})
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if result {
+		t.Errorf("Expected result to be false, got true")
+	}
+
+	// Test when elements contains all elements in the list
+	result, err = list.ContainsAll([]int{1, 2, 3})
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if !result {
+		t.Errorf("Expected result to be true, got false")
+	}
+
+	// Test when elements does not contain all elements in the list
+	result, err = list.ContainsAll([]int{1, 2, 4})
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if result {
+		t.Errorf("Expected result to be false, got true")
 	}
 }
