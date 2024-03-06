@@ -1,47 +1,7 @@
 package lists
 
-import "github.com/chiranjeevipavurala/gocollections/sets"
-
-type List[E comparable] interface {
-	Add(val E) bool
-
-	AddAtIndex(index int, val E) error
-	AddFirst(val E)
-	AddLast(val E)
-	AddAll([]E) bool
-
-	AddAllAtIndex(index int, collection []E) (bool, error)
-	Clear()
-	Contains(val E) bool
-	ContainsAll(collection []E) (bool, error)
-	Equals(collection []E) bool
-	Get(index int) (*E, error)
-	//HashCode() int
-	IndexOf(val E) int
-	IsEmpty() bool
-	Iterator() sets.Iterator[E]
-	LastIndexOf(val E) int
-	//listIterator()
-	//listIterator(int index)
-	RemoveAtIndex(index int) (*E, error)
-	RemoveFirst() (*E, error)
-	RemoveLast() (*E, error)
-	Remove(val E) bool
-	//	removeAll(Collection<?> c)
-	//replaceAll(UnaryOperator<E> operator)
-	//	retainAll(Collection<?> c)
-	Set(index int, element E) (*E, error)
-
-	Size() int
-	ToArray() []E
-	SubList(fromIndex int, toIndex int) (List[E], error)
-	/*
-		//	sort(Comparator<? super E> c)
-		//	spliterator()
 
 
-	*/
-}
 
 type ListNode[E comparable] interface {
 	GetNext() ListNode[E]

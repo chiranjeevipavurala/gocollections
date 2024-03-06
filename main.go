@@ -49,4 +49,26 @@ func main() {
 		fmt.Println("From List Iterator", val)
 	}
 
+	arrayList := lists.NewArrayListWithInitialCollection[string]([]string{"c", "d", "e", "a", "b"})
+	for _, val := range arrayList.ToArray() {
+		fmt.Println("From Array List", val)
+	}
+	arrayList.Sort(&StringComparator{})
+
+	for _, val := range arrayList.ToArray() {
+		fmt.Println("From Array List", val)
+	}
+
+}
+
+type StringComparator struct {
+}
+
+func (c *StringComparator) Compare(a, b string) int {
+	if a < b {
+		return -1
+	} else if a > b {
+		return 1
+	}
+	return 0
 }

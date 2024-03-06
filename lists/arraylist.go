@@ -2,29 +2,30 @@ package lists
 
 import (
 	"errors"
+	"sort"
 
+	"github.com/chiranjeevipavurala/gocollections/collections"
 	"github.com/chiranjeevipavurala/gocollections/errorcodes"
-	"github.com/chiranjeevipavurala/gocollections/sets"
 )
 
 type ArrayList[E comparable] struct {
 	values []E
 }
 
-func NewArrayList[E comparable]() List[E] {
+func NewArrayList[E comparable]() collections.List[E] {
 	values := make([]E, 0)
 	return &ArrayList[E]{
 		values: values,
 	}
 }
 
-func NewArrayListWithInitialCapacity[E comparable](capacity int) List[E] {
+func NewArrayListWithInitialCapacity[E comparable](capacity int) collections.List[E] {
 	values := make([]E, capacity)
 	return &ArrayList[E]{
 		values: values,
 	}
 }
-func NewArrayListWithInitialCollection[E comparable](values []E) List[E] {
+func NewArrayListWithInitialCollection[E comparable](values []E) collections.List[E] {
 	return &ArrayList[E]{
 		values: values,
 	}
@@ -60,10 +61,22 @@ func (a *ArrayList[E]) AddLast(element E) {
 	_ = a.AddAtIndex(len(a.values), element)
 }
 
-func (a *ArrayList[E]) AddAll(elements []E) bool {
+func (a *ArrayList[E]) AddAll(collection collections.Collection[E]) bool {
+	elements := collection.ToArray()
 	a.values = append(a.values, elements...)
 	return true
 }
+func (a *ArrayList[E]) RemoveAll(collection collections.Collection[E]) bool {
+	elements := collection.ToArray()
+	for _, val := range elements {
+		success := a.Remove(val)
+		if !success {
+			return false
+		}
+	}
+	return true
+}
+
 func (a *ArrayList[E]) AddAllAtIndex(index int, elements []E) (bool, error) {
 	if index > len(a.values) || index < 0 {
 		return false, errors.New(string(errorcodes.IndexOutOfBoundsError))
@@ -97,11 +110,11 @@ func (a *ArrayList[E]) Contains(element E) bool {
 	}
 	return false
 }
-func (a *ArrayList[E]) ContainsAll(elements []E) (bool, error) {
-
-	if elements == nil {
+func (a *ArrayList[E]) ContainsAll(collection collections.Collection[E]) (bool, error) {
+	if collection == nil {
 		return false, errors.New(string(errorcodes.NullPointerError))
 	}
+	elements := collection.ToArray()
 	if len(elements) == 0 {
 		return false, nil
 	}
@@ -113,17 +126,19 @@ func (a *ArrayList[E]) ContainsAll(elements []E) (bool, error) {
 	return true, nil
 }
 
-func (a *ArrayList[E]) Equals(elements []E) bool {
+func (a *ArrayList[E]) Equals(collection collections.Collection[E]) bool {
+	elements := collection.ToArray()
 	if len(a.values) != len(elements) {
 		return false
 	}
-	for i := 0; i < len(a.values); i++ {
-		if a.values[i] != elements[i] {
+	for i, val := range elements {
+		if a.values[i] != val {
 			return false
 		}
 	}
 	return true
 }
+
 func (a *ArrayList[E]) IndexOf(element E) int {
 	for i, val := range a.values {
 		if val == element {
@@ -147,16 +162,32 @@ func (a *ArrayList[E]) Get(index int) (*E, error) {
 	}
 	return &a.values[index], nil
 }
+
+func (a *ArrayList[E]) GetFirst() (*E, error) {
+	if len(a.values) == 0 {
+		return nil, errors.New(string(errorcodes.NoSuchElementError))
+	}
+	return &a.values[0], nil
+}
+
+func (a *ArrayList[E]) GetLast() (*E, error) {
+	if len(a.values) == 0 {
+		return nil, errors.New(string(errorcodes.NoSuchElementError))
+	}
+	return &a.values[len(a.values)-1], nil
+}
+
 func (a *ArrayList[E]) IsEmpty() bool {
 	return len(a.values) == 0
 }
-func (a *ArrayList[E]) Iterator() sets.Iterator[E] {
-	iterator := sets.NewIterator[E](a.values)
+func (a *ArrayList[E]) Iterator() collections.Iterator[E] {
+	iterator := NewArrayListIterator[E](a)
 	return iterator
 }
 func (a *ArrayList[E]) Size() int {
 	return len(a.values)
 }
+
 func (a *ArrayList[E]) Remove(element E) bool {
 	index := a.IndexOf(element)
 	if index == -1 {
@@ -195,6 +226,12 @@ func (a *ArrayList[E]) RemoveLast() (*E, error) {
 	return a.RemoveAtIndex(len(a.values) - 1)
 }
 
+func (a *ArrayList[E]) Reversed() {
+	for i, j := 0, len(a.values)-1; i < j; i, j = i+1, j-1 {
+		a.values[i], a.values[j] = a.values[j], a.values[i]
+	}
+}
+
 func (a *ArrayList[E]) Set(index int, element E) (*E, error) {
 
 	if index >= len(a.values) || index < 0 {
@@ -203,10 +240,16 @@ func (a *ArrayList[E]) Set(index int, element E) (*E, error) {
 	a.values[index] = element
 	return &element, nil
 }
+func (a *ArrayList[E]) Sort(comparator collections.Comparator[E]) {
+	sort.Slice(a.values, func(i, j int) bool {
+		return comparator.Compare(a.values[i], a.values[j]) < 0
+	})
+
+}
 func (a *ArrayList[E]) ToArray() []E {
 	return a.values
 }
-func (a *ArrayList[E]) SubList(fromIndex int, toIndex int) (List[E], error) {
+func (a *ArrayList[E]) SubList(fromIndex int, toIndex int) (collections.List[E], error) {
 	if fromIndex < 0 || toIndex > len(a.values) {
 		return nil, errors.New(string(errorcodes.IndexOutOfBoundsError))
 	}
@@ -220,4 +263,29 @@ func (a *ArrayList[E]) SubList(fromIndex int, toIndex int) (List[E], error) {
 	return &ArrayList[E]{
 		values: values,
 	}, nil
+}
+
+type ArrayListIterator[E comparable] struct {
+	values []E
+	index  int
+}
+
+func NewArrayListIterator[E comparable](a *ArrayList[E]) collections.Iterator[E] {
+	return &ArrayListIterator[E]{
+		values: a.ToArray(),
+		index:  0,
+	}
+}
+
+func (a *ArrayListIterator[E]) HasNext() bool {
+	return a.index < len(a.values)
+}
+
+func (a *ArrayListIterator[E]) Next() (*E, error) {
+	if a.index >= len(a.values) {
+		return nil, errors.New(string(errorcodes.NoSuchElementError))
+	}
+	val := a.values[a.index]
+	a.index++
+	return &val, nil
 }

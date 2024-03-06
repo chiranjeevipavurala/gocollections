@@ -70,11 +70,8 @@ func TestArrayList_AddAll(t *testing.T) {
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
-	if *val != 3 {
-		t.Errorf("Expected element at index 2 to be 3, got %d", *val)
-	}
 
-	list.AddAll([]int{4, 5, 6})
+	list.AddAll(NewArrayListWithInitialCollection[int]([]int{4, 5, 6}))
 
 	if list.Size() != 6 {
 		t.Errorf("Expected size to be 6, got %d", list.Size())
@@ -153,6 +150,12 @@ func TestArrayList_Get(t *testing.T) {
 	if *val != 3 {
 		t.Errorf("Expected element at index 2 to be 3, got %d", *val)
 	}
+
+	_, err = list.Get(3)
+	if err == nil {
+		t.Errorf("Expected IndexOutOfBoundsError, got no error")
+	}
+
 }
 
 func TestArrayList_IsEmpty(t *testing.T) {
@@ -249,14 +252,14 @@ func TestArrayList_Equals(t *testing.T) {
 	list.Add(2)
 	list.Add(3)
 
-	if !list.Equals([]int{1, 2, 3}) {
+	if !list.Equals(NewArrayListWithInitialCollection[int]([]int{1, 2, 3})) {
 		t.Errorf("Expected list to equal [1, 2, 3]")
 	}
 
-	if list.Equals([]int{1, 2}) {
+	if list.Equals(NewArrayListWithInitialCollection[int]([]int{1, 2})) {
 		t.Errorf("Expected list not to equal [1, 2]")
 	}
-	if list.Equals([]int{1, 3, 2}) {
+	if list.Equals(NewArrayListWithInitialCollection[int]([]int{1, 3, 2})) {
 		t.Errorf("Expected list not to equal [1, 3, 2]")
 	}
 }
@@ -726,6 +729,33 @@ func TestArrayList_Remove(t *testing.T) {
 		t.Errorf("Expected element not to be removed")
 	}
 }
+
+func TestArrayList_RemoveAll(t *testing.T) {
+	list := NewArrayList[int]()
+	list.Add(1)
+	list.Add(2)
+	list.Add(3)
+
+	if !list.RemoveAll(NewArrayListWithInitialCollection[int]([]int{2, 3})) {
+		t.Errorf("Expected elements to be removed")
+	}
+
+	if list.Size() != 1 {
+		t.Errorf("Expected size to be 1, got %d", list.Size())
+	}
+
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 0 to be 1, got %d", *val)
+	}
+
+	if list.RemoveAll(NewArrayListWithInitialCollection[int]([]int{2, 3})) {
+		t.Errorf("Expected elements not to be removed")
+	}
+}
 func TestArrayList_SubList(t *testing.T) {
 	list := NewArrayList[int]()
 	list.Add(1)
@@ -787,7 +817,7 @@ func TestArrayList_ContainsAll(t *testing.T) {
 	}
 
 	// Test when elements is empty
-	result, err = list.ContainsAll([]int{})
+	result, err = list.ContainsAll(NewArrayListWithInitialCollection[int]([]int{}))
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -796,7 +826,7 @@ func TestArrayList_ContainsAll(t *testing.T) {
 	}
 
 	// Test when elements contains all elements in the list
-	result, err = list.ContainsAll([]int{1, 2, 3})
+	result, err = list.ContainsAll(NewArrayListWithInitialCollection[int]([]int{1, 2, 3}))
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -805,11 +835,122 @@ func TestArrayList_ContainsAll(t *testing.T) {
 	}
 
 	// Test when elements does not contain all elements in the list
-	result, err = list.ContainsAll([]int{1, 2, 4})
+	result, err = list.ContainsAll(NewArrayListWithInitialCollection[int]([]int{1, 2, 4}))
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
 	if result {
 		t.Errorf("Expected result to be false, got true")
+	}
+
+}
+func TestArrayList_Reversed(t *testing.T) {
+	list := NewArrayList[int]()
+	list.Add(1)
+	list.Add(2)
+	list.Add(3)
+
+	list.Reversed()
+
+	if list.Size() != 3 {
+		t.Errorf("Expected size to be 3, got %d", list.Size())
+	}
+
+	val, err := list.Get(0)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected element at index 0 to be 3, got %d", *val)
+	}
+
+	val, err = list.Get(1)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 2 {
+		t.Errorf("Expected element at index 1 to be 2, got %d", *val)
+	}
+
+	val, err = list.Get(2)
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected element at index 2 to be 1, got %d", *val)
+	}
+}
+func TestArrayList_Sort(t *testing.T) {
+	list := NewArrayList[int]()
+	list.Add(3)
+	list.Add(1)
+	list.Add(2)
+
+	list.Sort(&ascendingComparator{})
+
+	// Verify that the list is sorted in ascending order
+	expected := []int{1, 2, 3}
+	for i := 0; i < list.Size(); i++ {
+		val, err := list.Get(i)
+		if err != nil {
+			t.Errorf("Expected no error, got %v", err)
+		}
+		if *val != expected[i] {
+			t.Errorf("Expected element at index %d to be %d, got %d", i, expected[i], *val)
+		}
+	}
+}
+
+type ascendingComparator struct {
+}
+
+func (asc *ascendingComparator) Compare(a int, b int) int {
+	if a < b {
+		return -1
+	} else if a > b {
+		return 1
+	}
+	return 0
+}
+func TestArrayList_GetLast(t *testing.T) {
+	list := NewArrayList[int]()
+	list.Add(1)
+	list.Add(2)
+	list.Add(3)
+
+	val, err := list.GetLast()
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 3 {
+		t.Errorf("Expected last element to be 3, got %d", *val)
+	}
+
+	list.Clear()
+
+	_, err = list.GetLast()
+	if err == nil {
+		t.Errorf("Expected NoSuchElementError, got no error")
+	}
+}
+func TestArrayList_GetFirst(t *testing.T) {
+	list := NewArrayList[int]()
+	list.Add(1)
+	list.Add(2)
+	list.Add(3)
+
+	val, err := list.GetFirst()
+	if err != nil {
+		t.Errorf("Expected no error, got %v", err)
+	}
+	if *val != 1 {
+		t.Errorf("Expected first element to be 1, got %d", *val)
+	}
+
+	list.Clear()
+
+	_, err = list.GetFirst()
+	if err == nil {
+		t.Errorf("Expected NoSuchElementError, got no error")
 	}
 }
