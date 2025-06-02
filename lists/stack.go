@@ -11,14 +11,14 @@ import (
 // Stack represents a LIFO (Last-In-First-Out) stack of elements.
 // It is implemented using an ArrayList and provides thread-safe operations.
 type Stack[E comparable] struct {
-	list  ArrayList[E]
+	list  *ArrayList[E]
 	mutex sync.RWMutex
 }
 
 // NewStack creates and returns a new empty Stack.
 func NewStack[E comparable]() *Stack[E] {
 	return &Stack[E]{
-		list: *NewArrayList[E](),
+		list: NewArrayList[E](),
 	}
 }
 
@@ -118,7 +118,7 @@ func (s *Stack[E]) Clone() *Stack[E] {
 
 	newStack := NewStack[E]()
 	clonedList := s.list.Clone()
-	newStack.list = *clonedList.(*ArrayList[E])
+	newStack.list = clonedList.(*ArrayList[E])
 	return newStack
 }
 

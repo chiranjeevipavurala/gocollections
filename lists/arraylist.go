@@ -918,13 +918,6 @@ func (a *ArrayList[E]) FastSubList(fromIndex, toIndex int) (collections.List[E],
 	}, nil
 }
 
-func (a *ArrayList[E]) checkIndex(index int) error {
-	if index < 0 || index >= len(a.values) {
-		return errors.New(string(errcodes.IndexOutOfBoundsError))
-	}
-	return nil
-}
-
 func (a *ArrayList[E]) RemoveAllBatch(elements []E) bool {
 	if elements == nil {
 		return false

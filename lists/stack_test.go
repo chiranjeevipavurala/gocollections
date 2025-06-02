@@ -780,3 +780,53 @@ func TestStack_Iterator(t *testing.T) {
 		t.Errorf("Expected iterator to be invalidated after stack modification")
 	}
 }
+
+func TestAddAllNilCollection(t *testing.T) {
+	t.Parallel()
+	s := NewStack[int]()
+
+	// Test with nil collection
+	modified := s.AddAll(nil)
+	if modified {
+		t.Error("AddAll(nil) should return false")
+	}
+	if s.Size() != 0 {
+		t.Error("AddAll(nil) should not modify the stack")
+	}
+
+	// Test with empty collection
+	emptyCollection := NewArrayList[int]()
+	modified = s.AddAll(emptyCollection)
+	if modified {
+		t.Error("AddAll(empty) should return false")
+	}
+	if s.Size() != 0 {
+		t.Error("AddAll(empty) should not modify the stack")
+	}
+}
+
+func TestAddAllWithCollection(t *testing.T) {
+	t.Parallel()
+	s := NewStack[int]()
+	// Create a collection with some elements
+	collection := NewArrayList[int]()
+	collection.Add(1)
+	collection.Add(2)
+	collection.Add(3)
+
+	modified := s.AddAll(collection)
+	if !modified {
+		t.Error("AddAll should return true when collection is not empty")
+	}
+	if s.Size() != 3 {
+		t.Errorf("Stack size should be 3, got %d", s.Size())
+	}
+	// Verify elements were added in correct order
+	expected := []int{1, 2, 3}
+	actual := s.ToArray()
+	for i, v := range expected {
+		if actual[i] != v {
+			t.Errorf("Expected %d at position %d, got %d", v, i, actual[i])
+		}
+	}
+}
