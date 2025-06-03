@@ -305,6 +305,21 @@ func TestTreeMap_Concurrent(t *testing.T) {
 	}
 }
 
+// Helper function to print the tree structure and colors for debugging
+func printTreeStructure[K comparable, V comparable](t *testing.T, node *Node[K, V], prefix string) {
+	if node == nil {
+		t.Logf("%s<nil>", prefix)
+		return
+	}
+	color := "Black"
+	if node.color == Red {
+		color = "Red"
+	}
+	t.Logf("%sKey: %v, Color: %s", prefix, node.key, color)
+	printTreeStructure(t, node.left, prefix+"  L-")
+	printTreeStructure(t, node.right, prefix+"  R-")
+}
+
 func TestTreeMap_RedBlackTreeProperties(t *testing.T) {
 	tm := NewTreeMap[int, string](&IntComparator{}).(*TreeMap[int, string])
 
@@ -335,6 +350,21 @@ func TestTreeMap_PutIfAbsent(t *testing.T) {
 	val = tm.PutIfAbsent(2, "")
 	assert.Equal(t, "", val, "PutIfAbsent should handle empty string value")
 	assert.Equal(t, "", *tm.Get(2), "PutIfAbsent should store empty string value")
+}
+
+// New test case for PutIfAbsent to achieve 100% coverage
+func TestTreeMap_PutIfAbsent_ExistingKey(t *testing.T) {
+	tm := NewTreeMap[int, string](&IntComparator{})
+
+	// Insert a key-value pair
+	tm.Put(1, "one")
+
+	// Call PutIfAbsent with the same key but a different value
+	val := tm.PutIfAbsent(1, "ONE")
+
+	// Verify that the original value is returned and the map is unchanged
+	assert.Equal(t, "one", val, "PutIfAbsent should return the existing value")
+	assert.Equal(t, "one", *tm.Get(1), "PutIfAbsent should not change the existing value")
 }
 
 func TestTreeMap_Replace(t *testing.T) {
@@ -678,6 +708,15 @@ func TestTreeMap_RedBlackProperties(t *testing.T) {
 	tm.root.color = Black
 	tm.Put(2, "two")
 	tm.Put(3, "three")
+	tm.Put(4, "four")
+
+	// Create a red-red violation in the actual tree structure
+	// From the debug output, we can see the structure is:
+	//     2 (Black)
+	//    / \
+	//   1   3 (Red)
+	//        \
+	//         4 (Red)
 	tm.root.right.color = Red
 	tm.root.right.right.color = Red
 	assert.False(t, tm.verifyRedBlackProperties(), "Tree with red-red violation should fail Red-Black properties")
@@ -689,10 +728,22 @@ func TestTreeMap_RedBlackProperties(t *testing.T) {
 	tm.Put(7, "seven")
 	tm.Put(1, "one")
 	tm.Put(9, "nine")
-	tm.root.left.color = Red
-	tm.root.right.color = Red
+	// Add left child to 7 and right child to 3 to balance black heights
+	tm.Put(4, "four") // right child of 3
+	tm.Put(6, "six")  // left child of 7
+
+	// Set all nodes to black
+	tm.root.color = Black
+	tm.root.left.color = Black
+	tm.root.right.color = Black
 	tm.root.left.left.color = Black
+	tm.root.left.right.color = Black
+	tm.root.right.left.color = Black
 	tm.root.right.right.color = Black
+
+	// Print tree structure for debugging
+	printTreeStructure(t, tm.root, "Balanced tree before assertion: ")
+
 	assert.True(t, tm.verifyRedBlackProperties(), "Balanced tree should satisfy Red-Black properties")
 }
 
@@ -775,4 +826,192 @@ func TestTreeMap_LowerHigherKey(t *testing.T) {
 	higher, err = tm.HigherKey(9)
 	assert.Error(t, err, "HigherKey should return error when no higher key exists")
 	assert.Nil(t, higher, "HigherKey should return nil when no higher key exists")
+}
+
+// Comprehensive test for PutIfAbsent
+func TestTreeMap_PutIfAbsent_Comprehensive(t *testing.T) {
+	tm := NewTreeMap[int, string](&IntComparator{})
+
+	// 1. Inserts value if key does not exist
+	val := tm.PutIfAbsent(10, "ten")
+	assert.Equal(t, "", val, "Should return zero value for new key")
+	assert.Equal(t, "ten", *tm.Get(10), "Should insert value for new key")
+
+	// 2. Does not overwrite existing value
+	val = tm.PutIfAbsent(10, "TEN")
+	assert.Equal(t, "ten", val, "Should return existing value for present key")
+	assert.Equal(t, "ten", *tm.Get(10), "Should not overwrite existing value")
+
+	// 3. Works with zero/empty values
+	val = tm.PutIfAbsent(20, "")
+	assert.Equal(t, "", val, "Should return zero value for new key with empty string")
+	assert.Equal(t, "", *tm.Get(20), "Should store empty string value")
+
+	// 4. Works with multiple keys
+	tm.PutIfAbsent(30, "thirty")
+	tm.PutIfAbsent(40, "forty")
+	assert.Equal(t, "thirty", *tm.Get(30), "Should insert value for key 30")
+	assert.Equal(t, "forty", *tm.Get(40), "Should insert value for key 40")
+
+	// 5. Works after removal
+	tm.PutIfAbsent(50, "fifty")
+	assert.Equal(t, "fifty", *tm.Get(50), "Should insert value for key 50")
+	tm.Remove(50)
+	val = tm.PutIfAbsent(50, "FIFTY")
+	assert.Equal(t, "", val, "Should return zero value after removal")
+	assert.Equal(t, "FIFTY", *tm.Get(50), "Should insert value after removal")
+
+	// 6. Explicitly cover left and right insertion paths
+	// Clear the map first
+	tm.Clear()
+	// Insert root
+	tm.PutIfAbsent(100, "root")
+	// Insert left child (less than root)
+	val = tm.PutIfAbsent(50, "left")
+	assert.Equal(t, "", val, "Should insert left child")
+	assert.Equal(t, "left", *tm.Get(50), "Should store left child value")
+	// Insert right child (greater than root)
+	val = tm.PutIfAbsent(150, "right")
+	assert.Equal(t, "", val, "Should insert right child")
+	assert.Equal(t, "right", *tm.Get(150), "Should store right child value")
+}
+
+func TestTreeMap_DeleteNode_NilNodeAndSuccessor(t *testing.T) {
+	tm := NewTreeMap[int, string](&IntComparator{}).(*TreeMap[int, string])
+	tm.deleteNode(nil)
+	assert.Nil(t, tm.root, "deleteNode with nil node should leave root as nil")
+}
+
+func TestTreeMap_FixInsert_NilNode(t *testing.T) {
+	tm := NewTreeMap[int, string](&IntComparator{}).(*TreeMap[int, string])
+
+	// Call fixInsert with nil node
+	tm.fixInsert(nil)
+
+	// Verify tree remains unchanged
+	assert.Nil(t, tm.root, "Tree should remain unchanged when fixInsert is called with nil node")
+}
+
+func TestTreeMap_FixDelete_NilSibling(t *testing.T) {
+	tm := NewTreeMap[int, string](&IntComparator{}).(*TreeMap[int, string])
+
+	// Create a tree with a black root and a black left child
+	// The left child will have a nil sibling (right child of root)
+	tm.Put(2, "two") // root
+	tm.Put(1, "one") // left child
+	tm.root.color = Black
+	tm.root.left.color = Black
+
+	// Call fixDelete on the left child
+	// This will test the case where sibling (right child of root) is nil
+	tm.fixDelete(tm.root.left)
+
+	// Verify tree remains unchanged
+	assert.Equal(t, 2, tm.root.key, "Root should remain unchanged")
+	assert.Equal(t, "two", tm.root.value, "Root value should remain unchanged")
+	assert.Equal(t, Black, tm.root.color, "Root should remain black")
+	assert.Equal(t, 1, tm.root.left.key, "Left child should remain unchanged")
+	assert.Equal(t, "one", tm.root.left.value, "Left child value should remain unchanged")
+	assert.Equal(t, Black, tm.root.left.color, "Left child should remain black")
+	assert.Nil(t, tm.root.right, "Right child should remain nil")
+}
+
+func TestTreeMap_FixDelete_NilLeftSibling(t *testing.T) {
+	tm := NewTreeMap[int, string](&IntComparator{}).(*TreeMap[int, string])
+
+	// Create a tree with a black root and a black right child
+	// The right child will have a nil sibling (left child of root)
+	tm.Put(1, "one") // root
+	tm.Put(2, "two") // right child
+	tm.root.color = Black
+	tm.root.right.color = Black
+
+	// Call fixDelete on the right child
+	// This will test the case where sibling (left child of root) is nil
+	tm.fixDelete(tm.root.right)
+
+	// Verify tree remains unchanged
+	assert.Equal(t, 1, tm.root.key, "Root should remain unchanged")
+	assert.Equal(t, "one", tm.root.value, "Root value should remain unchanged")
+	assert.Equal(t, Black, tm.root.color, "Root should remain black")
+	assert.Equal(t, 2, tm.root.right.key, "Right child should remain unchanged")
+	assert.Equal(t, "two", tm.root.right.value, "Right child value should remain unchanged")
+	assert.Equal(t, Black, tm.root.right.color, "Right child should remain black")
+	assert.Nil(t, tm.root.left, "Left child should remain nil")
+}
+
+func TestTreeMap_Equals(t *testing.T) {
+	tm := NewTreeMap[int, string](&IntComparator{})
+
+	// Test with nil input
+	assert.False(t, tm.Equals(nil), "Equals should return false for nil input")
+
+	// Test with different type
+	assert.False(t, tm.Equals("not a map"), "Equals should return false for different type")
+
+	// Test with empty maps
+	emptyMap := NewTreeMap[int, string](&IntComparator{})
+	assert.True(t, tm.Equals(emptyMap), "Empty maps should be equal")
+
+	// Test with different sizes
+	tm.Put(1, "one")
+	assert.False(t, tm.Equals(emptyMap), "Maps with different sizes should not be equal")
+
+	// Test with same content
+	sameMap := NewTreeMap[int, string](&IntComparator{})
+	sameMap.Put(1, "one")
+	assert.True(t, tm.Equals(sameMap), "Maps with same content should be equal")
+
+	// Test with different content
+	diffMap := NewTreeMap[int, string](&IntComparator{})
+	diffMap.Put(1, "ONE")
+	assert.False(t, tm.Equals(diffMap), "Maps with different values should not be equal")
+
+	// Test with multiple entries
+	tm.Put(2, "two")
+	tm.Put(3, "three")
+	sameMap.Put(2, "two")
+	sameMap.Put(3, "three")
+	assert.True(t, tm.Equals(sameMap), "Maps with multiple same entries should be equal")
+
+	// Test with different keys
+	diffKeysMap := NewTreeMap[int, string](&IntComparator{})
+	diffKeysMap.Put(1, "one")
+	diffKeysMap.Put(2, "two")
+	diffKeysMap.Put(4, "four")
+	assert.False(t, tm.Equals(diffKeysMap), "Maps with different keys should not be equal")
+
+	// Test with empty string values
+	tm.Clear()
+	tm.Put(1, "")
+	emptyValueMap := NewTreeMap[int, string](&IntComparator{})
+	emptyValueMap.Put(1, "")
+	assert.True(t, tm.Equals(emptyValueMap), "Maps with empty string values should be equal")
+}
+
+func TestTreeMap_DeleteNode_WithBothChildren(t *testing.T) {
+	tm := NewTreeMap[int, string](&IntComparator{}).(*TreeMap[int, string])
+
+	// Create a tree with a node that has both left and right children
+	// Structure:
+	//     2 (root)
+	//    / \
+	//   1   3
+	tm.Put(2, "two")   // root
+	tm.Put(1, "one")   // left child
+	tm.Put(3, "three") // right child
+
+	// Get the root node
+	node := tm.root
+
+	// Call deleteNode on the root
+	tm.deleteNode(node)
+
+	// After deletion, the successor (3) should replace the root
+	// and the tree should maintain its structure
+	assert.Equal(t, 3, tm.root.key, "Root should be replaced by successor")
+	assert.Equal(t, "three", tm.root.value, "Root value should be successor's value")
+	assert.Equal(t, 1, tm.root.left.key, "Left child should remain unchanged")
+	assert.Equal(t, "one", tm.root.left.value, "Left child value should remain unchanged")
+	assert.Nil(t, tm.root.right, "Right child should be nil after successor moves up")
 }

@@ -2,6 +2,7 @@ package maps
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 
 	"github.com/chiranjeevipavurala/gocollections/collections"
@@ -112,6 +113,7 @@ func (t *TreeMap[K, V]) verifyRedBlackProperties() bool {
 // verifyBlackHeight recursively checks black height and red-black properties
 func (t *TreeMap[K, V]) verifyBlackHeight(node *Node[K, V], count int, blackCount *int) bool {
 	if node == nil {
+		fmt.Printf("verifyBlackHeight: reached leaf, black count = %d\n", count)
 		if *blackCount == -1 {
 			*blackCount = count
 			return true
@@ -384,7 +386,7 @@ func (t *TreeMap[K, V]) RemoveKeyWithValue(key K, value V) bool {
 		return false
 	}
 
-	t.root = t.deleteNode(node)
+	t.deleteNode(node)
 	if t.root != nil {
 		t.root.color = Black
 	}
@@ -404,7 +406,7 @@ func (t *TreeMap[K, V]) Remove(key K) V {
 	}
 
 	value := node.value
-	t.root = t.deleteNode(node)
+	t.deleteNode(node)
 	if t.root != nil {
 		t.root.color = Black
 	}
@@ -526,23 +528,18 @@ func (t *TreeMap[K, V]) getNode(key K) *Node[K, V] {
 	return nil
 }
 
-func (t *TreeMap[K, V]) deleteNode(node *Node[K, V]) *Node[K, V] {
+func (t *TreeMap[K, V]) deleteNode(node *Node[K, V]) {
 	if node == nil {
-		return nil
+		return
 	}
 
-	// If node has two children, find successor
 	if node.left != nil && node.right != nil {
 		successor := t.getFirstNode(node.right)
-		if successor == nil {
-			return nil
-		}
 		node.key = successor.key
 		node.value = successor.value
 		node = successor
 	}
 
-	// Get the child node
 	var child *Node[K, V]
 	if node.left != nil {
 		child = node.left
@@ -550,7 +547,6 @@ func (t *TreeMap[K, V]) deleteNode(node *Node[K, V]) *Node[K, V] {
 		child = node.right
 	}
 
-	// Handle color and fix-up
 	if node.color == Black {
 		if child != nil {
 			child.color = Black
@@ -559,7 +555,6 @@ func (t *TreeMap[K, V]) deleteNode(node *Node[K, V]) *Node[K, V] {
 		}
 	}
 
-	// Replace the node with its child
 	if node.parent == nil {
 		t.root = child
 	} else if node == node.parent.left {
@@ -572,7 +567,7 @@ func (t *TreeMap[K, V]) deleteNode(node *Node[K, V]) *Node[K, V] {
 		child.parent = node.parent
 	}
 
-	return t.root
+	// No return value
 }
 
 func (t *TreeMap[K, V]) fixDelete(node *Node[K, V]) {
@@ -686,6 +681,9 @@ func (t *TreeMap[K, V]) getFirstNode(node *Node[K, V]) *Node[K, V] {
 	if node == nil {
 		node = t.root
 	}
+	if node == nil {
+		return nil
+	}
 	for node.left != nil {
 		node = node.left
 	}
@@ -695,6 +693,9 @@ func (t *TreeMap[K, V]) getFirstNode(node *Node[K, V]) *Node[K, V] {
 func (t *TreeMap[K, V]) getLastNode(node *Node[K, V]) *Node[K, V] {
 	if node == nil {
 		node = t.root
+	}
+	if node == nil {
+		return nil
 	}
 	for node.right != nil {
 		node = node.right
