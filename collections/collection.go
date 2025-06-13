@@ -1,6 +1,10 @@
 // Package collections provides interfaces and implementations for various data structures.
 package collections
 
+import (
+	"errors"
+)
+
 // Iterable represents a collection that can be iterated over.
 type Iterable[E any] interface {
 	// Iterator returns an iterator over the elements in this collection.
@@ -337,3 +341,6 @@ func (h *HashMapEntry[K, V]) Equals(obj any) bool {
 	}
 	return h.Key == entry.Key && h.Value == entry.Value
 }
+
+// ErrNoSuchElement is returned when an iterator has no more elements.
+var ErrNoSuchElement = errors.New("no such element")
