@@ -18,17 +18,31 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.24'
+        go-version: '1.23'
+        
+    - name: Download dependencies
+      run: |
+        echo "Downloading dependencies..."
+        go mod download
+        go mod verify
         
     - name: Run benchmarks
       run: |
         echo "Running benchmarks..."
-        go test -bench=. -benchtime=2s ./benchmark/ > benchmark_results.txt
+        go test -bench=. -benchtime=2s ./benchmark/ > benchmark_results.txt 2>&1 || {
+          echo "Benchmark execution failed. Checking for errors..."
+          go test -bench=. -benchtime=2s ./benchmark/ -v
+          exit 1
+        }
         
     - name: Run memory benchmarks
       run: |
         echo "Running memory benchmarks..."
-        go test -bench=. -benchmem -benchtime=2s ./benchmark/ > benchmark_memory_results.txt
+        go test -bench=. -benchmem -benchtime=2s ./benchmark/ > benchmark_memory_results.txt 2>&1 || {
+          echo "Memory benchmark execution failed. Checking for errors..."
+          go test -bench=. -benchmem -benchtime=2s ./benchmark/ -v
+          exit 1
+        }
         
     - name: Generate benchmark report
       run: |

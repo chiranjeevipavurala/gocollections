@@ -1,0 +1,8 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/chiranjeevipavurala/gocollections/benchmark
+cpu: Apple M1 Pro
+BenchmarkArrayListAdd-10                        	108414674	        20.75 ns/op	      34 B/op	       0 allocs/op
+BenchmarkArrayListGet-10                        	172199769	        13.88 ns/op	       0 B/op	       0 allocs/op
+BenchmarkArrayListInsertAtIndex-10              	signal: interrupt
+FAIL	github.com/chiranjeevipavurala/gocollections/benchmark	50.043s

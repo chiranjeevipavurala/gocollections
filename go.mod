@@ -1,11 +1,10 @@
 module github.com/chiranjeevipavurala/gocollections
 
-go 1.22.0
+go 1.23.0
 
-require (
-	github.com/stretchr/testify v1.10.0
-	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225
-)
+toolchain go1.24.3
+
+require github.com/stretchr/testify v1.10.0
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

@@ -1,13 +1,13 @@
 package queues
 
 import (
+	"cmp"
 	"errors"
 	"reflect"
 	"sync"
 
 	"github.com/chiranjeevipavurala/gocollections/collections"
 	errcodes "github.com/chiranjeevipavurala/gocollections/errors"
-	"golang.org/x/exp/constraints"
 )
 
 // DefaultCapacity is the default initial capacity for PriorityQueue
@@ -529,41 +529,28 @@ func NewPriorityQueueFromCollection[E comparable](collection collections.Collect
 }
 
 // IntComparator implements Comparator for any ordered type
-type IntComparator[E constraints.Ordered] struct{}
+type IntComparator[E cmp.Ordered] struct{}
 
 func (c *IntComparator[E]) Compare(a, b E) int {
-	if a < b {
-		return -1
-	}
-	if a > b {
-		return 1
-	}
-	return 0
+	return cmp.Compare(a, b)
 }
 
-// NewPriorityQueueFromSortedSet creates a new priority queue containing the elements
-// of the specified sorted set
-func NewPriorityQueueFromSortedSet[E constraints.Ordered](sortedSet collections.SortedSet[E]) collections.Queue[E] {
-	if sortedSet == nil {
-		// Create a new priority queue with a default comparator
-		return &PriorityQueue[E]{
-			elements:   make([]E, 0, DefaultCapacity),
-			comparator: &IntComparator[E]{}, // Use IntComparator as default
-			mu:         sync.RWMutex{},
-		}
+// NewPriorityQueueFromSortedSet creates a new priority queue from a sorted set
+func NewPriorityQueueFromSortedSet[E cmp.Ordered](sortedSet collections.SortedSet[E]) collections.Queue[E] {
+	if sortedSet == nil || sortedSet.IsEmpty() {
+		return NewPriorityQueue[E](&IntComparator[E]{})
 	}
 
+	// Get elements from the sorted set
 	elements := sortedSet.ToArray()
-	pq := &PriorityQueue[E]{
-		elements:   make([]E, len(elements)),
-		comparator: sortedSet.Comparator(),
-		mu:         sync.RWMutex{},
+	priorityQueue := NewPriorityQueueWithCapacity[E](len(elements), &IntComparator[E]{})
+
+	// Add all elements to the priority queue
+	for _, element := range elements {
+		priorityQueue.Add(element)
 	}
 
-	copy(pq.elements, elements)
-	// No need to heapify as elements are already sorted
-
-	return pq
+	return priorityQueue
 }
 
 // Element retrieves, but does not remove, the head of this queue
