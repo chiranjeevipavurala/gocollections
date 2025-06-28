@@ -193,6 +193,34 @@ func (lhm *LinkedHashMap[K, V]) PutAll(m collections.Map[K, V]) {
 		return
 	}
 
+	// If the source map is also a LinkedHashMap, use ForEachEntry to preserve order
+	if sourceLinkedMap, ok := m.(*LinkedHashMap[K, V]); ok {
+		lhm.mu.Lock()
+		defer lhm.mu.Unlock()
+
+		sourceLinkedMap.ForEachEntry(func(key K, value V) {
+			if existingNode, exists := lhm.items[key]; exists {
+				existingNode.value = value
+			} else {
+				newNode := &node[K, V]{
+					key:   key,
+					value: value,
+				}
+				lhm.items[key] = newNode
+				if lhm.head == nil {
+					lhm.head = newNode
+					lhm.tail = newNode
+				} else {
+					newNode.prev = lhm.tail
+					lhm.tail.next = newNode
+					lhm.tail = newNode
+				}
+			}
+		})
+		return
+	}
+
+	// For other map types, use the original approach
 	// Get entries before acquiring lock
 	entries := m.EntrySet().ToArray()
 
