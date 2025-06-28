@@ -1,0 +1,144 @@
+# Go Collections Benchmark Results
+# Generated: Thu Jun 26 11:49:13 MST 2025
+# System: Darwin LM-XRJPGVVTG9 23.6.0 Darwin Kernel Version 23.6.0: Thu Mar  6 22:01:15 PST 2025; root:xnu-10063.141.1.704.6~1/RELEASE_ARM64_T6000 arm64
+# Go version: go1.24.3
+# Architecture: arm64
+# OS: darwin
+# CPU cores: 10
+
+## All Benchmarks
+```
+goos: darwin
+goarch: arm64
+pkg: github.com/chiranjeevipavurala/gocollections/benchmark
+cpu: Apple M1 Pro
+BenchmarkArrayListAdd-10                    	90939844	        25.42 ns/op
+BenchmarkArrayListGet-10                    	174098974	        13.86 ns/op
+BenchmarkArrayListInsertAtIndex-10          	 1000000	     77512 ns/op
+BenchmarkArrayListRemove-10                 	129672387	        18.58 ns/op
+BenchmarkArrayListContains-10               	13706348	       176.6 ns/op
+BenchmarkLinkedListAdd-10                   	46041729	        49.59 ns/op
+BenchmarkLinkedListGet-10                   	 2295327	      1041 ns/op
+BenchmarkLinkedListInsertAtIndex-10         	15963226	       149.5 ns/op
+BenchmarkLinkedListRemove-10                	129581614	        18.54 ns/op
+BenchmarkLinkedListContains-10              	 1666868	      1435 ns/op
+BenchmarkLinkedListAddFirst-10              	47343230	        51.36 ns/op
+BenchmarkLinkedListAddLast-10               	63777699	        43.80 ns/op
+BenchmarkLinkedListRemoveFirst-10           	173685846	        13.80 ns/op
+BenchmarkLinkedListRemoveLast-10            	174043570	        13.78 ns/op
+BenchmarkHashMapPut-10                      	48452668	        46.00 ns/op
+BenchmarkHashMapGet-10                      	72485926	        32.08 ns/op
+BenchmarkHashMapRemove-10                   	100000000	        22.37 ns/op
+BenchmarkHashMapHasKey-10                   	88556800	        27.40 ns/op
+BenchmarkLinkedHashMapPut-10                	80972342	        30.88 ns/op
+BenchmarkLinkedHashMapGet-10                	83647374	        30.26 ns/op
+BenchmarkLinkedHashMapRemove-10             	100000000	        22.35 ns/op
+BenchmarkLinkedHashMapHasKey-10             	91687188	        27.81 ns/op
+BenchmarkLinkedHashMapPutIfAbsent-10        	76072040	        29.70 ns/op
+BenchmarkLinkedHashMapComputeIfAbsent-10    	73223287	        31.48 ns/op
+BenchmarkLinkedHashMapForEachEntry-10       	 6198818	       383.1 ns/op
+BenchmarkTreeMapPut-10                      	58138653	        41.41 ns/op
+BenchmarkTreeMapGet-10                      	66241767	        36.39 ns/op
+BenchmarkTreeMapRemove-10                   	100000000	        22.37 ns/op
+BenchmarkPriorityQueueAdd-10                	100000000	        23.54 ns/op
+BenchmarkPriorityQueuePoll-10               	174185197	        13.81 ns/op
+BenchmarkPriorityQueuePeek-10               	174306273	        13.81 ns/op
+BenchmarkPriorityQueueRemove-10             	129904128	        18.51 ns/op
+BenchmarkPriorityQueueContains-10           	13514704	       177.5 ns/op
+BenchmarkStackPush-10                       	67694064	        36.38 ns/op
+BenchmarkStackPop-10                        	100000000	        21.03 ns/op
+BenchmarkStackPeek-10                       	48127496	        49.16 ns/op
+BenchmarkLinkedListAsQueueOffer-10          	49327822	        49.18 ns/op
+BenchmarkLinkedListAsQueuePoll-10           	173507281	        13.97 ns/op
+BenchmarkLinkedListAsQueuePeek-10           	145622341	        16.50 ns/op
+BenchmarkHashSetAdd-10                      	27867807	       167.2 ns/op
+BenchmarkHashSetContains-10                 	170516530	        13.93 ns/op
+BenchmarkHashSetRemove-10                   	129250358	        18.69 ns/op
+BenchmarkHashSetAddAll-10                   	 1854474	      1262 ns/op
+BenchmarkLinkedHashSetAdd-10                	17673346	       262.5 ns/op
+BenchmarkLinkedHashSetContains-10           	171422851	        13.88 ns/op
+BenchmarkLinkedHashSetRemove-10             	128997696	        18.61 ns/op
+BenchmarkLinkedHashSetAddAll-10             	 3257523	       805.9 ns/op
+BenchmarkHashSetIterator-10                 	  129949	     18455 ns/op
+BenchmarkLinkedHashSetIterator-10           	  230154	      9958 ns/op
+PASS
+ok  	github.com/chiranjeevipavurala/gocollections/benchmark	228.561s
+```
+
+## Memory Allocation Benchmarks
+```
+goos: darwin
+goarch: arm64
+pkg: github.com/chiranjeevipavurala/gocollections/benchmark
+cpu: Apple M1 Pro
+BenchmarkArrayListAdd-10                    	112709670	        23.05 ns/op	      33 B/op	       0 allocs/op
+BenchmarkArrayListGet-10                    	173858265	        13.78 ns/op	       0 B/op	       0 allocs/op
+BenchmarkArrayListInsertAtIndex-10          	 1000000	     89786 ns/op	      29 B/op	       0 allocs/op
+BenchmarkArrayListRemove-10                 	127590154	        19.25 ns/op	       0 B/op	       0 allocs/op
+BenchmarkArrayListContains-10               	13499460	       177.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkLinkedListAdd-10                   	49461207	        46.03 ns/op	      48 B/op	       1 allocs/op
+BenchmarkLinkedListGet-10                   	 2261947	      1063 ns/op	       8 B/op	       1 allocs/op
+BenchmarkLinkedListInsertAtIndex-10         	15714124	       152.4 ns/op	      48 B/op	       1 allocs/op
+BenchmarkLinkedListRemove-10                	128650459	        18.82 ns/op	       0 B/op	       0 allocs/op
+BenchmarkLinkedListContains-10              	 1648149	      1453 ns/op	       0 B/op	       0 allocs/op
+BenchmarkLinkedListAddFirst-10              	49305021	        50.00 ns/op	      48 B/op	       1 allocs/op
+BenchmarkLinkedListAddLast-10               	62607741	        44.12 ns/op	      48 B/op	       1 allocs/op
+BenchmarkLinkedListRemoveFirst-10           	172349522	        14.31 ns/op	       0 B/op	       0 allocs/op
+BenchmarkLinkedListRemoveLast-10            	170717972	        14.00 ns/op	       0 B/op	       0 allocs/op
+BenchmarkHashMapPut-10                      	52685689	        46.21 ns/op	       4 B/op	       1 allocs/op
+BenchmarkHashMapGet-10                      	69675706	        33.69 ns/op	      16 B/op	       2 allocs/op
+BenchmarkHashMapRemove-10                   	100000000	        22.74 ns/op	       4 B/op	       1 allocs/op
+BenchmarkHashMapHasKey-10                   	85826678	        27.63 ns/op	       4 B/op	       1 allocs/op
+BenchmarkLinkedHashMapPut-10                	75779002	        31.07 ns/op	       4 B/op	       1 allocs/op
+BenchmarkLinkedHashMapGet-10                	83908382	        30.23 ns/op	       4 B/op	       1 allocs/op
+BenchmarkLinkedHashMapRemove-10             	100000000	        22.46 ns/op	       4 B/op	       1 allocs/op
+BenchmarkLinkedHashMapHasKey-10             	88850084	        26.22 ns/op	       4 B/op	       1 allocs/op
+BenchmarkLinkedHashMapPutIfAbsent-10        	76641910	        29.57 ns/op	       4 B/op	       1 allocs/op
+BenchmarkLinkedHashMapComputeIfAbsent-10    	77390540	        31.03 ns/op	       4 B/op	       1 allocs/op
+BenchmarkLinkedHashMapForEachEntry-10       	 6056475	       395.3 ns/op	    1640 B/op	       6 allocs/op
+BenchmarkTreeMapPut-10                      	58354405	        41.30 ns/op	       4 B/op	       1 allocs/op
+BenchmarkTreeMapGet-10                      	65749146	        36.40 ns/op	       4 B/op	       1 allocs/op
+BenchmarkTreeMapRemove-10                   	100000000	        22.49 ns/op	       4 B/op	       1 allocs/op
+BenchmarkPriorityQueueAdd-10                	100000000	        23.91 ns/op	      27 B/op	       0 allocs/op
+BenchmarkPriorityQueuePoll-10               	174246763	        13.91 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPriorityQueuePeek-10               	174223936	        14.23 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPriorityQueueRemove-10             	129739848	        18.53 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPriorityQueueContains-10           	13583649	       176.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkStackPush-10                       	66173125	        35.02 ns/op	      25 B/op	       0 allocs/op
+BenchmarkStackPop-10                        	100000000	        21.01 ns/op	       0 B/op	       0 allocs/op
+BenchmarkStackPeek-10                       	48824936	        49.11 ns/op	       0 B/op	       0 allocs/op
+BenchmarkLinkedListAsQueueOffer-10          	47320593	        47.51 ns/op	      48 B/op	       1 allocs/op
+BenchmarkLinkedListAsQueuePoll-10           	173756394	        13.84 ns/op	       0 B/op	       0 allocs/op
+BenchmarkLinkedListAsQueuePeek-10           	145580758	        16.46 ns/op	       8 B/op	       1 allocs/op
+BenchmarkHashSetAdd-10                      	27556986	       165.3 ns/op	      45 B/op	       0 allocs/op
+BenchmarkHashSetContains-10                 	173925510	        13.85 ns/op	       0 B/op	       0 allocs/op
+BenchmarkHashSetRemove-10                   	129850926	        18.50 ns/op	       0 B/op	       0 allocs/op
+BenchmarkHashSetAddAll-10                   	 1908331	      1243 ns/op	     896 B/op	       1 allocs/op
+BenchmarkLinkedHashSetAdd-10                	16710681	       262.3 ns/op	      96 B/op	       1 allocs/op
+BenchmarkLinkedHashSetContains-10           	173921082	        13.82 ns/op	       0 B/op	       0 allocs/op
+BenchmarkLinkedHashSetRemove-10             	129836080	        18.48 ns/op	       0 B/op	       0 allocs/op
+BenchmarkLinkedHashSetAddAll-10             	 3017923	       789.7 ns/op	     896 B/op	       1 allocs/op
+BenchmarkHashSetIterator-10                 	  132399	     18416 ns/op	   16224 B/op	    1002 allocs/op
+BenchmarkLinkedHashSetIterator-10           	  240068	     10009 ns/op	    8008 B/op	    1001 allocs/op
+PASS
+ok  	github.com/chiranjeevipavurala/gocollections/benchmark	240.047s
+```
+
+## Performance Summary
+
+### Fastest Operations (< 20 ns/op)
+Based on the benchmark results above, these are the fastest operations:
+
+### Good Operations (20-50 ns/op)
+These operations perform well:
+
+### Slower Operations (> 50 ns/op)
+These operations are slower but may be expected for their complexity:
+
+### Recommendations
+- Use ArrayList for random access operations
+- Use LinkedList for frequent insertions/deletions at ends
+- Use HashMap for maximum performance without ordering
+- Use LinkedHashMap when you need insertion order (minimal overhead)
+- Use TreeMap when you need sorted keys
+
