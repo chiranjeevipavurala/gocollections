@@ -21,15 +21,16 @@ func BenchmarkPriorityQueueAdd(b *testing.B) {
 
 func BenchmarkPriorityQueuePoll(b *testing.B) {
 	comparator := &IntComparator{}
-	priorityQueue := queues.NewPriorityQueue[int](comparator)
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		priorityQueue.Add(i)
-	}
-
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		if priorityQueue.Size() > 0 {
+		// Create a fresh queue for each iteration
+		priorityQueue := queues.NewPriorityQueue[int](comparator)
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			priorityQueue.Add(j)
+		}
+		// Poll all elements
+		for priorityQueue.Size() > 0 {
 			priorityQueue.Poll()
 		}
 	}
@@ -89,15 +90,16 @@ func BenchmarkStackPush(b *testing.B) {
 }
 
 func BenchmarkStackPop(b *testing.B) {
-	stack := lists.NewStack[int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		stack.Push(i)
-	}
-
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		if stack.Size() > 0 {
+		// Create a fresh stack for each iteration
+		stack := lists.NewStack[int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			stack.Push(j)
+		}
+		// Pop all elements
+		for stack.Size() > 0 {
 			stack.Pop()
 		}
 	}
@@ -128,15 +130,16 @@ func BenchmarkLinkedListAsQueueOffer(b *testing.B) {
 }
 
 func BenchmarkLinkedListAsQueuePoll(b *testing.B) {
-	queue := lists.NewLinkedList[int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		queue.Offer(i)
-	}
-
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		if queue.Size() > 0 {
+		// Create a fresh queue for each iteration
+		queue := lists.NewLinkedList[int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			queue.Offer(j)
+		}
+		// Poll all elements
+		for queue.Size() > 0 {
 			queue.Poll()
 		}
 	}
@@ -248,7 +251,6 @@ func BenchmarkPriorityQueueIterator(b *testing.B) {
 
 func BenchmarkPriorityQueueAddAll(b *testing.B) {
 	comparator := &IntComparator{}
-	priorityQueue := queues.NewPriorityQueue[int](comparator)
 	otherQueue := queues.NewPriorityQueue[int](comparator)
 	// Pre-populate other queue
 	for i := 0; i < SmallSize; i++ {
@@ -257,17 +259,17 @@ func BenchmarkPriorityQueueAddAll(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		// Create a fresh queue for each iteration
+		priorityQueue := queues.NewPriorityQueue[int](comparator)
 		priorityQueue.AddAll(otherQueue)
 	}
 }
 
 func BenchmarkPriorityQueueRemoveAll(b *testing.B) {
 	comparator := &IntComparator{}
-	priorityQueue := queues.NewPriorityQueue[int](comparator)
 	otherQueue := queues.NewPriorityQueue[int](comparator)
-	// Pre-populate both queues
+	// Pre-populate other queue
 	for i := 0; i < MediumSize; i++ {
-		priorityQueue.Add(i)
 		if i%2 == 0 {
 			otherQueue.Add(i)
 		}
@@ -275,6 +277,12 @@ func BenchmarkPriorityQueueRemoveAll(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		// Create a fresh queue for each iteration
+		priorityQueue := queues.NewPriorityQueue[int](comparator)
+		// Pre-populate queue
+		for j := 0; j < MediumSize; j++ {
+			priorityQueue.Add(j)
+		}
 		priorityQueue.RemoveAll(otherQueue)
 	}
 }
@@ -315,16 +323,16 @@ func BenchmarkPriorityQueueEquals(b *testing.B) {
 
 func BenchmarkPriorityQueueRemoveIf(b *testing.B) {
 	comparator := &IntComparator{}
-	priorityQueue := queues.NewPriorityQueue[int](comparator)
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		priorityQueue.Add(i)
-	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Create a fresh queue for each iteration
+		priorityQueue := queues.NewPriorityQueue[int](comparator)
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			priorityQueue.Add(j)
+		}
 
-	// Type assert to access RemoveIf
-	if pq, ok := priorityQueue.(*queues.PriorityQueue[int]); ok {
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
+		if pq, ok := priorityQueue.(*queues.PriorityQueue[int]); ok {
 			pq.RemoveIf(func(element int) bool {
 				return element%2 == 0
 			})
@@ -390,15 +398,16 @@ func BenchmarkPriorityQueueOffer(b *testing.B) {
 
 func BenchmarkPriorityQueueRemoveHead(b *testing.B) {
 	comparator := &IntComparator{}
-	priorityQueue := queues.NewPriorityQueue[int](comparator)
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		priorityQueue.Add(i)
-	}
-
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		if priorityQueue.Size() > 0 {
+		// Create a fresh queue for each iteration
+		priorityQueue := queues.NewPriorityQueue[int](comparator)
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			priorityQueue.Add(j)
+		}
+		// Remove all elements
+		for priorityQueue.Size() > 0 {
 			priorityQueue.RemoveHead()
 		}
 	}

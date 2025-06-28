@@ -34,17 +34,20 @@ func BenchmarkHashMapGet(b *testing.B) {
 }
 
 func BenchmarkHashMapRemove(b *testing.B) {
-	hashMap := maps.NewHashMap[string, int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		key := string(rune(i%26 + 'a'))
-		hashMap.Put(key, i)
-	}
-
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		key := string(rune(i%26 + 'a'))
-		hashMap.Remove(key)
+		// Create a fresh map for each iteration
+		hashMap := maps.NewHashMap[string, int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			key := string(rune(j%26 + 'a'))
+			hashMap.Put(key, j)
+		}
+		// Remove all elements
+		for j := 0; j < MediumSize; j++ {
+			key := string(rune(j%26 + 'a'))
+			hashMap.Remove(key)
+		}
 	}
 }
 
@@ -91,17 +94,20 @@ func BenchmarkLinkedHashMapGet(b *testing.B) {
 }
 
 func BenchmarkLinkedHashMapRemove(b *testing.B) {
-	linkedHashMap := maps.NewLinkedHashMap[string, int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		key := string(rune(i%26 + 'a'))
-		linkedHashMap.Put(key, i)
-	}
-
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		key := string(rune(i%26 + 'a'))
-		linkedHashMap.Remove(key)
+		// Create a fresh map for each iteration
+		linkedHashMap := maps.NewLinkedHashMap[string, int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			key := string(rune(j%26 + 'a'))
+			linkedHashMap.Put(key, j)
+		}
+		// Remove all elements
+		for j := 0; j < MediumSize; j++ {
+			key := string(rune(j%26 + 'a'))
+			linkedHashMap.Remove(key)
+		}
 	}
 }
 
@@ -246,55 +252,64 @@ func BenchmarkLinkedHashMapGetOrDefault(b *testing.B) {
 }
 
 func BenchmarkLinkedHashMapRemoveKeyWithValue(b *testing.B) {
-	linkedHashMap := maps.NewLinkedHashMap[string, int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		key := string(rune(i%26 + 'a'))
-		linkedHashMap.Put(key, i)
-	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Create a fresh map for each iteration
+		linkedHashMap := maps.NewLinkedHashMap[string, int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			key := string(rune(j%26 + 'a'))
+			linkedHashMap.Put(key, j)
+		}
 
-	// Type assert to access RemoveKeyWithValue
-	if lhm, ok := linkedHashMap.(*maps.LinkedHashMap[string, int]); ok {
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
-			key := string(rune(i%26 + 'a'))
-			lhm.RemoveKeyWithValue(key, i)
+		if lhm, ok := linkedHashMap.(*maps.LinkedHashMap[string, int]); ok {
+			// Remove all elements
+			for j := 0; j < MediumSize; j++ {
+				key := string(rune(j%26 + 'a'))
+				lhm.RemoveKeyWithValue(key, j)
+			}
 		}
 	}
 }
 
 func BenchmarkLinkedHashMapReplace(b *testing.B) {
-	linkedHashMap := maps.NewLinkedHashMap[string, int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		key := string(rune(i%26 + 'a'))
-		linkedHashMap.Put(key, i)
-	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Create a fresh map for each iteration
+		linkedHashMap := maps.NewLinkedHashMap[string, int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			key := string(rune(j%26 + 'a'))
+			linkedHashMap.Put(key, j)
+		}
 
-	// Type assert to access Replace
-	if lhm, ok := linkedHashMap.(*maps.LinkedHashMap[string, int]); ok {
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
-			key := string(rune(i%26 + 'a'))
-			lhm.Replace(key, i*2)
+		if lhm, ok := linkedHashMap.(*maps.LinkedHashMap[string, int]); ok {
+			// Replace all elements
+			for j := 0; j < MediumSize; j++ {
+				key := string(rune(j%26 + 'a'))
+				lhm.Replace(key, j*2)
+			}
 		}
 	}
 }
 
 func BenchmarkLinkedHashMapReplaceKeyWithValue(b *testing.B) {
-	linkedHashMap := maps.NewLinkedHashMap[string, int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		key := string(rune(i%26 + 'a'))
-		linkedHashMap.Put(key, i)
-	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Create a fresh map for each iteration
+		linkedHashMap := maps.NewLinkedHashMap[string, int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			key := string(rune(j%26 + 'a'))
+			linkedHashMap.Put(key, j)
+		}
 
-	// Type assert to access ReplaceKeyWithValue
-	if lhm, ok := linkedHashMap.(*maps.LinkedHashMap[string, int]); ok {
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
-			key := string(rune(i%26 + 'a'))
-			lhm.ReplaceKeyWithValue(key, i, i*2)
+		if lhm, ok := linkedHashMap.(*maps.LinkedHashMap[string, int]); ok {
+			// Replace all elements
+			for j := 0; j < MediumSize; j++ {
+				key := string(rune(j%26 + 'a'))
+				lhm.ReplaceKeyWithValue(key, j, j*2)
+			}
 		}
 	}
 }
@@ -375,7 +390,6 @@ func BenchmarkLinkedHashMapEquals(b *testing.B) {
 }
 
 func BenchmarkLinkedHashMapPutAll(b *testing.B) {
-	linkedHashMap := maps.NewLinkedHashMap[string, int]()
 	otherMap := maps.NewLinkedHashMap[string, int]()
 	// Pre-populate other map
 	for i := 0; i < SmallSize; i++ {
@@ -383,10 +397,11 @@ func BenchmarkLinkedHashMapPutAll(b *testing.B) {
 		otherMap.Put(key, i)
 	}
 
-	// Type assert to access PutAll
-	if lhm, ok := linkedHashMap.(*maps.LinkedHashMap[string, int]); ok {
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Create a fresh map for each iteration
+		linkedHashMap := maps.NewLinkedHashMap[string, int]()
+		if lhm, ok := linkedHashMap.(*maps.LinkedHashMap[string, int]); ok {
 			lhm.PutAll(otherMap)
 		}
 	}

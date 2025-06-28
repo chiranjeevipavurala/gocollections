@@ -133,20 +133,25 @@ func BenchmarkHashSetRemoveAll(b *testing.B) {
 }
 
 func BenchmarkHashSetRetainAll(b *testing.B) {
-	set := sets.NewHashSet[int]()
 	otherSet := sets.NewHashSet[int]()
-	// Pre-populate both sets
+	// Pre-populate other set
 	for i := 0; i < MediumSize; i++ {
-		set.Add(i)
 		if i%2 == 0 {
 			otherSet.Add(i)
 		}
 	}
 
-	// Type assert to access RetainAll
-	if hashSet, ok := set.(*sets.HashSet[int]); ok {
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Create a fresh set for each iteration
+		set := sets.NewHashSet[int]()
+		// Pre-populate set
+		for j := 0; j < MediumSize; j++ {
+			set.Add(j)
+		}
+
+		// Type assert to access RetainAll
+		if hashSet, ok := set.(*sets.HashSet[int]); ok {
 			hashSet.RetainAll(otherSet)
 		}
 	}
@@ -201,16 +206,17 @@ func BenchmarkHashSetClone(b *testing.B) {
 }
 
 func BenchmarkHashSetRemoveIf(b *testing.B) {
-	set := sets.NewHashSet[int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		set.Add(i)
-	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Create a fresh set for each iteration
+		set := sets.NewHashSet[int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			set.Add(j)
+		}
 
-	// Type assert to access RemoveIf
-	if hashSet, ok := set.(*sets.HashSet[int]); ok {
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
+		// Type assert to access RemoveIf
+		if hashSet, ok := set.(*sets.HashSet[int]); ok {
 			hashSet.RemoveIf(func(element int) bool {
 				return element%2 == 0
 			})
@@ -237,16 +243,17 @@ func BenchmarkHashSetForEach(b *testing.B) {
 }
 
 func BenchmarkHashSetAddAllBatch(b *testing.B) {
-	set := sets.NewHashSet[int]()
 	elements := make([]int, SmallSize)
 	for i := 0; i < SmallSize; i++ {
 		elements[i] = i
 	}
 
-	// Type assert to access AddAllBatch
-	if hashSet, ok := set.(*sets.HashSet[int]); ok {
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Create a fresh set for each iteration
+		set := sets.NewHashSet[int]()
+		// Type assert to access AddAllBatch
+		if hashSet, ok := set.(*sets.HashSet[int]); ok {
 			hashSet.AddAllBatch(elements)
 		}
 	}
@@ -300,20 +307,20 @@ func BenchmarkLinkedHashSetContains(b *testing.B) {
 }
 
 func BenchmarkLinkedHashSetRemove(b *testing.B) {
-	set := sets.NewLinkedHashSet[int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		set.Add(i)
-	}
-
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		// Create a fresh set for each iteration
+		set := sets.NewLinkedHashSet[int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			set.Add(j)
+		}
+
 		set.Remove(i % MediumSize)
 	}
 }
 
 func BenchmarkLinkedHashSetAddAll(b *testing.B) {
-	set := sets.NewLinkedHashSet[int]()
 	otherSet := sets.NewLinkedHashSet[int]()
 	// Pre-populate other set
 	for i := 0; i < SmallSize; i++ {
@@ -322,6 +329,8 @@ func BenchmarkLinkedHashSetAddAll(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		// Create a fresh set for each iteration
+		set := sets.NewLinkedHashSet[int]()
 		set.AddAll(otherSet)
 	}
 }
@@ -385,11 +394,9 @@ func BenchmarkLinkedHashSetToArray(b *testing.B) {
 }
 
 func BenchmarkLinkedHashSetRemoveAll(b *testing.B) {
-	set := sets.NewLinkedHashSet[int]()
 	otherSet := sets.NewLinkedHashSet[int]()
-	// Pre-populate both sets
+	// Pre-populate other set
 	for i := 0; i < MediumSize; i++ {
-		set.Add(i)
 		if i%2 == 0 {
 			otherSet.Add(i)
 		}
@@ -397,6 +404,13 @@ func BenchmarkLinkedHashSetRemoveAll(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		// Create a fresh set for each iteration
+		set := sets.NewLinkedHashSet[int]()
+		// Pre-populate set
+		for j := 0; j < MediumSize; j++ {
+			set.Add(j)
+		}
+
 		set.RemoveAll(otherSet)
 	}
 }

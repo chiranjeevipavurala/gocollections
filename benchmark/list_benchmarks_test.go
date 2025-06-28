@@ -185,7 +185,6 @@ func BenchmarkArrayListSet(b *testing.B) {
 }
 
 func BenchmarkArrayListAddAll(b *testing.B) {
-	list := lists.NewArrayList[int]()
 	otherList := lists.NewArrayList[int]()
 	// Pre-populate other list
 	for i := 0; i < SmallSize; i++ {
@@ -194,16 +193,16 @@ func BenchmarkArrayListAddAll(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		// Create a fresh list for each iteration
+		list := lists.NewArrayList[int]()
 		list.AddAll(otherList)
 	}
 }
 
 func BenchmarkArrayListRemoveAll(b *testing.B) {
-	list := lists.NewArrayList[int]()
 	otherList := lists.NewArrayList[int]()
-	// Pre-populate both lists
+	// Pre-populate other list
 	for i := 0; i < MediumSize; i++ {
-		list.Add(i)
 		if i%2 == 0 {
 			otherList.Add(i)
 		}
@@ -211,16 +210,20 @@ func BenchmarkArrayListRemoveAll(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		// Create a fresh list for each iteration
+		list := lists.NewArrayList[int]()
+		// Pre-populate list
+		for j := 0; j < MediumSize; j++ {
+			list.Add(j)
+		}
 		list.RemoveAll(otherList)
 	}
 }
 
 func BenchmarkArrayListRetainAll(b *testing.B) {
-	list := lists.NewArrayList[int]()
 	otherList := lists.NewArrayList[int]()
-	// Pre-populate both lists
+	// Pre-populate other list
 	for i := 0; i < MediumSize; i++ {
-		list.Add(i)
 		if i%2 == 0 {
 			otherList.Add(i)
 		}
@@ -228,6 +231,12 @@ func BenchmarkArrayListRetainAll(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		// Create a fresh list for each iteration
+		list := lists.NewArrayList[int]()
+		// Pre-populate list
+		for j := 0; j < MediumSize; j++ {
+			list.Add(j)
+		}
 		list.RetainAll(otherList)
 	}
 }
@@ -514,7 +523,6 @@ func BenchmarkLinkedListSet(b *testing.B) {
 }
 
 func BenchmarkLinkedListAddAll(b *testing.B) {
-	list := lists.NewLinkedList[int]()
 	otherList := lists.NewLinkedList[int]()
 	// Pre-populate other list
 	for i := 0; i < SmallSize; i++ {
@@ -523,16 +531,16 @@ func BenchmarkLinkedListAddAll(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		// Create a fresh list for each iteration
+		list := lists.NewLinkedList[int]()
 		list.AddAll(otherList)
 	}
 }
 
 func BenchmarkLinkedListRemoveAll(b *testing.B) {
-	list := lists.NewLinkedList[int]()
 	otherList := lists.NewLinkedList[int]()
-	// Pre-populate both lists
+	// Pre-populate other list
 	for i := 0; i < MediumSize; i++ {
-		list.Add(i)
 		if i%2 == 0 {
 			otherList.Add(i)
 		}
@@ -540,6 +548,12 @@ func BenchmarkLinkedListRemoveAll(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
+		// Create a fresh list for each iteration
+		list := lists.NewLinkedList[int]()
+		// Pre-populate list
+		for j := 0; j < MediumSize; j++ {
+			list.Add(j)
+		}
 		list.RemoveAll(otherList)
 	}
 }
@@ -632,15 +646,16 @@ func BenchmarkLinkedListOffer(b *testing.B) {
 }
 
 func BenchmarkLinkedListPoll(b *testing.B) {
-	list := lists.NewLinkedList[int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		list.Offer(i)
-	}
-
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		if list.Size() > 0 {
+		// Create a fresh list for each iteration
+		list := lists.NewLinkedList[int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			list.Offer(j)
+		}
+		// Poll all elements
+		for list.Size() > 0 {
 			list.Poll()
 		}
 	}
@@ -684,15 +699,16 @@ func BenchmarkLinkedListPush(b *testing.B) {
 }
 
 func BenchmarkLinkedListPop(b *testing.B) {
-	list := lists.NewLinkedList[int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		list.Push(i)
-	}
-
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		if list.Size() > 0 {
+		// Create a fresh list for each iteration
+		list := lists.NewLinkedList[int]()
+		// Pre-populate with data
+		for j := 0; j < MediumSize; j++ {
+			list.Push(j)
+		}
+		// Pop all elements
+		for list.Size() > 0 {
 			list.Pop()
 		}
 	}
