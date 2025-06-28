@@ -10,6 +10,7 @@ on:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
+    timeout-minutes: 15 # Add timeout to prevent hanging
     
     steps:
     - name: Checkout code
@@ -29,18 +30,18 @@ jobs:
     - name: Run benchmarks
       run: |
         echo "Running benchmarks..."
-        go test -bench=. -benchtime=2s ./benchmark/ > benchmark_results.txt 2>&1 || {
+        go test -bench=. -benchtime=500ms -timeout=10m ./benchmark/ > benchmark_results.txt 2>&1 || {
           echo "Benchmark execution failed. Checking for errors..."
-          go test -bench=. -benchtime=2s ./benchmark/ -v
+          go test -bench=. -benchtime=500ms -timeout=10m ./benchmark/ -v
           exit 1
         }
         
     - name: Run memory benchmarks
       run: |
         echo "Running memory benchmarks..."
-        go test -bench=. -benchmem -benchtime=2s ./benchmark/ > benchmark_memory_results.txt 2>&1 || {
+        go test -bench=. -benchmem -benchtime=500ms -timeout=10m ./benchmark/ > benchmark_memory_results.txt 2>&1 || {
           echo "Memory benchmark execution failed. Checking for errors..."
-          go test -bench=. -benchmem -benchtime=2s ./benchmark/ -v
+          go test -bench=. -benchmem -benchtime=500ms -timeout=10m ./benchmark/ -v
           exit 1
         }
         

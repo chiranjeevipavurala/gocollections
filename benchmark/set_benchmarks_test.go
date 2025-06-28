@@ -338,19 +338,15 @@ func BenchmarkLinkedHashSetAddAll(b *testing.B) {
 // Additional LinkedHashSet benchmarks for missing methods
 
 func BenchmarkLinkedHashSetClear(b *testing.B) {
-	set := sets.NewLinkedHashSet[int]()
-	// Pre-populate with data
-	for i := 0; i < MediumSize; i++ {
-		set.Add(i)
-	}
-
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		set.Clear()
-		// Re-populate for next iteration
+		// Create a fresh set for each iteration
+		set := sets.NewLinkedHashSet[int]()
+		// Pre-populate with data
 		for j := 0; j < MediumSize; j++ {
 			set.Add(j)
 		}
+		set.Clear()
 	}
 }
 
