@@ -253,20 +253,23 @@ func BenchmarkHashSetAddAllBatch(b *testing.B) {
 }
 
 func BenchmarkHashSetRemoveAllBatch(b *testing.B) {
-	set := sets.NewHashSet[int]()
 	elements := make([]int, SmallSize)
-	// Pre-populate set and elements
-	for i := 0; i < MediumSize; i++ {
-		set.Add(i)
-		if i < SmallSize {
-			elements[i] = i
-		}
+	// Pre-populate elements array
+	for i := 0; i < SmallSize; i++ {
+		elements[i] = i
 	}
 
-	// Type assert to access RemoveAllBatch
-	if hashSet, ok := set.(*sets.HashSet[int]); ok {
-		b.ResetTimer()
-		for i := 0; i < b.N; i++ {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Create a fresh set for each iteration
+		set := sets.NewHashSet[int]()
+		// Pre-populate set with MediumSize elements
+		for j := 0; j < MediumSize; j++ {
+			set.Add(j)
+		}
+
+		// Type assert to access RemoveAllBatch
+		if hashSet, ok := set.(*sets.HashSet[int]); ok {
 			hashSet.RemoveAllBatch(elements)
 		}
 	}
